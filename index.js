@@ -38,8 +38,8 @@ async function run() {
     // await client.connect();
     
     // use server data/ read server
-    const servicesCollection = client.db('carDoctor').collection('services');
-    const bookingCollection = client.db('carDoctor').collection('booking');
+    const servicesCollection = client.db('repair-zone').collection('services');
+   
     
     app.get('/services', async(req, res) => {
     const cursor = servicesCollection.find();
@@ -49,15 +49,15 @@ async function run() {
     
     //check out data
     
-    app.get('/services/:id', async(req, res) => {
-    const id = req.params.id;
-    const query = { _id: new ObjectId(id) };
-    const options ={
-    projection: {title: 1, price: 1, service_id: 1, img: 1}
-    }
-    const result = await servicesCollection.findOne(query, options);
-    res.send(result);
-    });
+    // app.get('/services/:id', async(req, res) => {
+    // const id = req.params.id;
+    // const query = { _id: new ObjectId(id) };
+    // const options ={
+    // projection: {title: 1, price: 1, service_id: 1, img: 1}
+    // }
+    // const result = await servicesCollection.findOne(query, options);
+    // res.send(result);
+    // });
     
     //  booking information send request to server
     
