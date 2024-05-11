@@ -39,8 +39,9 @@ async function run() {
     
     // use server data/ read server
     const servicesCollection = client.db('repair-zone').collection('services');
+    const bookServicesCollection = client.db('repair-zone').collection('bookServices');
    
-    
+    //data read form server
     app.get('/services', async(req, res) => {
     const cursor = servicesCollection.find();
     const result = await cursor.toArray();
@@ -49,24 +50,40 @@ async function run() {
     
     //check out data
     
-    // app.get('/services/:id', async(req, res) => {
-    // const id = req.params.id;
-    // const query = { _id: new ObjectId(id) };
+    app.get('/services/:id', async(req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
     // const options ={
     // projection: {title: 1, price: 1, service_id: 1, img: 1}
     // }
-    // const result = await servicesCollection.findOne(query, options);
-    // res.send(result);
-    // });
+    const result = await servicesCollection.findOne(query);
+    res.send(result);
+    });
+    
+    
+    
+    
+    
     
     //  booking information send request to server
     
     app.post('/booking', async(req, res) => {
     const booking = req.body;
-    const result = await bookingCollection.insertOne(booking);
+    console.log(booking);
+    const result = await bookServicesCollection.insertOne(booking);
     res.send(result)
     
     })
+    
+    // booking data read from server
+    app.get('/booking', async(req, res) => {
+    let query = {};
+    if(req.query.email){
+    query ={email: req.query.email}
+    }
+    const result = await bookServicesCollection.find(query).toArray();
+    res.send(result);
+    });
     
     
     // Send a ping to confirm a successful connection
