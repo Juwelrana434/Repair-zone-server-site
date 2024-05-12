@@ -40,10 +40,18 @@ async function run() {
     // use server data/ read server
     const servicesCollection = client.db('repair-zone').collection('services');
     const bookServicesCollection = client.db('repair-zone').collection('bookServices');
+    const addServicesCollection = client.db('repair-zone').collection('addServices');
    
     //data read form server
     app.get('/services', async(req, res) => {
     const cursor = servicesCollection.find();
+    const result = await cursor.toArray();
+    res.send(result);
+    });
+    
+    // all services read form server
+    app.get('/addServices', async(req, res) => {
+    const cursor = addServicesCollection.find();
     const result = await cursor.toArray();
     res.send(result);
     });
@@ -61,9 +69,16 @@ async function run() {
     });
     
     
+    // add service data send to server
     
-    
-    
+    app.post('/services', async(req, res) => {
+      const newAddService  = req.body;
+      console.log(newAddService );
+      const result = await addServicesCollection.insertOne(newAddService );
+      res.send(result)
+      
+      })
+      
     
     //  booking information send request to server
     
