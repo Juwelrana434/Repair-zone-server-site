@@ -48,10 +48,20 @@ async function run() {
     const result = await cursor.toArray();
     res.send(result);
     });
+    // for pagination purposes
+    app.get('/servicesCount', async(req, res) => {
+   
+    const count = await servicesCollection.estimatedDocumentCount();
+    // const result = await cursor.toArray();
+    res.send({count});
+    });
     
     // all services read form server
     app.get('/addServices', async(req, res) => {
-    const cursor = addServicesCollection.find();
+      // console.log(req.query);
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
+    const cursor = servicesCollection.find().skip(page * size).limit(size);
     const result = await cursor.toArray();
     res.send(result);
     });
@@ -74,7 +84,7 @@ async function run() {
     app.post('/services', async(req, res) => {
       const newAddService  = req.body;
       console.log(newAddService );
-      const result = await addServicesCollection.insertOne(newAddService );
+      const result = await servicesCollection.insertOne(newAddService );
       res.send(result)
       
       })
@@ -100,6 +110,14 @@ async function run() {
     res.send(result);
     });
     
+    
+    // for my add service data read 
+    app.get('/addService/:email', async (req, res) => {
+      // console.log(req.params.email);
+        const cursor = touristCollection.find({email:req.params.email});
+        const result = await cursor.toArray();
+        res.send(result);
+        })
     
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
